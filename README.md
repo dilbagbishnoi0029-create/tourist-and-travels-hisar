@@ -2,7 +2,9 @@
 
 A single-page travel website for **Tourist and Travels**, based in Hisar and covering destinations across India.
 
-- **Live site:** https://tourist-and-travels-hisar.web.app
+- **Live site (Firebase):** https://tourist-and-travels-hisar.web.app
+- **GitHub Pages mirror:** https://dilbagbishnoi0029-create.github.io/tourist-and-travels-hisar/
+- **Source:** https://github.com/dilbagbishnoi0029-create/tourist-and-travels-hisar
 - **Firebase project:** `tourist-and-travels-hisar`
 - **Stack:** plain HTML, CSS, and JavaScript (no build step)
 
