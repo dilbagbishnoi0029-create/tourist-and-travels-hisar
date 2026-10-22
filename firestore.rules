@@ -1,0 +1,26 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function validEnquiry(data) {
+      return data.keys().hasOnly(['name', 'email', 'phone', 'destination', 'message', 'createdAt'])
+        && data.keys().hasAll(['name', 'email', 'phone', 'destination', 'message', 'createdAt'])
+        && data.name is string && data.name.size() >= 2 && data.name.size() <= 80
+        && data.email is string && data.email.size() <= 120
+        && data.email.matches('.+@.+')
+        && data.phone is string && data.phone.size() >= 7 && data.phone.size() <= 20
+        && data.destination is string && data.destination.size() <= 80
+        && data.message is string && data.message.size() <= 1000
+        && data.createdAt is string && data.createdAt.size() <= 40;
+    }
+
+    match /enquiries/{enquiryId} {
+      allow create: if validEnquiry(request.resource.data);
+      allow read, update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

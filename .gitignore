@@ -1,0 +1,6 @@
+.firebase/
+.opencode/
+tasks/
+firebase-debug.log
+*.log
+node_modules/
