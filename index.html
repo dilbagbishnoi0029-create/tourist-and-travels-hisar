@@ -12,7 +12,7 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="Tourist and Travels | Curated Journeys Across India">
   <meta property="og:description" content="Small-group journeys from Hisar across India, handpicked stays, and local guides. Plan your next trip on WhatsApp.">
-  <meta property="og:image" content="assets/hero.jpg">
+  <meta property="og:image" content="assets/hero.webp">
   <meta property="og:locale" content="en_IN">
 </head>
 <body data-content-status="placeholder">
@@ -39,6 +39,7 @@
           <li><a class="nav-link" href="#about">About</a></li>
           <li><a class="nav-link" href="#packages">Packages</a></li>
           <li><a class="nav-link" href="#testimonials">Testimonials</a></li>
+          <li><a class="nav-link admin-link" id="admin-link" href="#admin-panel" hidden>Admin</a></li>
         </ul>
         <a class="btn btn-primary btn-small" href="https://wa.me/919996095229?text=Hi%20Tourist%20and%20Travels%2C%20I%27d%20like%20to%20plan%20a%20trip." target="_blank" rel="noopener">Plan your trip</a>
         <div class="auth-area">
@@ -87,7 +88,7 @@
 
         <div class="hero-visual">
           <figure class="hero-figure">
-            <img src="assets/hero.jpg" width="1280" height="853" alt="The Indus River valley in Ladakh, with snow-capped Himalayan peaks above green fields and a winding mountain road." fetchpriority="high">
+            <img src="assets/hero.webp" width="1280" height="853" alt="The Indus River valley in Ladakh, with snow-capped Himalayan peaks above green fields and a winding mountain road." fetchpriority="high">
             <figcaption class="floating-card">
               <span class="floating-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" focusable="false"><path d="M3 17.5 9 8l4 5.5L16 9l5 8.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="5.5" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
@@ -152,10 +153,10 @@
           </div>
         </div>
 
-        <div class="package-grid">
+        <div class="package-grid" id="package-grid">
           <article class="package-card">
             <div class="package-media">
-              <img src="assets/kerala.jpg" width="1280" height="853" loading="lazy" alt="Traditional houseboats on the Kerala backwaters, lined with palm trees.">
+              <img src="assets/kerala.webp" width="1280" height="853" loading="lazy" alt="Traditional houseboats on the Kerala backwaters, lined with palm trees.">
               <span class="package-duration">5 days · 4 nights</span>
             </div>
             <div class="package-body">
@@ -178,7 +179,7 @@
 
           <article class="package-card">
             <div class="package-media">
-              <img src="assets/rajasthan.jpg" width="1280" height="576" loading="lazy" alt="Camel riders crossing the Thar Desert dunes near Jaisalmer.">
+              <img src="assets/rajasthan.webp" width="1280" height="576" loading="lazy" alt="Camel riders crossing the Thar Desert dunes near Jaisalmer.">
               <span class="package-duration">6 days · 5 nights</span>
             </div>
             <div class="package-body">
@@ -201,7 +202,7 @@
 
           <article class="package-card">
             <div class="package-media">
-              <img src="assets/ladakh.jpg" width="1280" height="619" loading="lazy" alt="Pangong Lake in Ladakh, with turquoise water beneath barren Himalayan mountains.">
+              <img src="assets/ladakh.webp" width="1280" height="619" loading="lazy" alt="Pangong Lake in Ladakh, with turquoise water beneath barren Himalayan mountains.">
               <span class="package-duration">7 days · 6 nights</span>
             </div>
             <div class="package-body">
@@ -224,7 +225,7 @@
 
           <article class="package-card">
             <div class="package-media">
-              <img src="assets/goa.jpg" width="1280" height="853" loading="lazy" alt="Palm trees overlooking the rocky coastline at Vagator, Goa.">
+              <img src="assets/goa.webp" width="1280" height="853" loading="lazy" alt="Palm trees overlooking the rocky coastline at Vagator, Goa.">
               <span class="package-duration">4 days · 3 nights</span>
             </div>
             <div class="package-body">
@@ -247,7 +248,7 @@
 
           <article class="package-card">
             <div class="package-media">
-              <img src="assets/meghalaya.jpg" width="1280" height="853" loading="lazy" alt="A double-decker living root bridge over a stream in Meghalaya.">
+              <img src="assets/meghalaya.webp" width="1280" height="853" loading="lazy" alt="A double-decker living root bridge over a stream in Meghalaya.">
               <span class="package-duration">5 days · 4 nights</span>
             </div>
             <div class="package-body">
@@ -270,7 +271,7 @@
 
           <article class="package-card">
             <div class="package-media">
-              <img src="assets/andaman.jpg" width="1280" height="853" loading="lazy" alt="Radhanagar Beach on Havelock Island, Andaman, with white sand and turquoise water.">
+              <img src="assets/andaman.webp" width="1280" height="853" loading="lazy" alt="Radhanagar Beach on Havelock Island, Andaman, with white sand and turquoise water.">
               <span class="package-duration">6 days · 5 nights</span>
             </div>
             <div class="package-body">
@@ -290,6 +291,71 @@
               </a>
             </div>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section admin-panel" id="admin-panel" aria-labelledby="admin-title" hidden>
+      <div class="container">
+        <div class="section-head admin-head">
+          <div>
+            <p class="eyebrow">Admin</p>
+            <h2 id="admin-title">Package manager</h2>
+          </div>
+          <button class="btn btn-primary btn-small" id="admin-new" type="button">Add package</button>
+        </div>
+        <p class="admin-note">Only approved Google accounts can edit packages. Saving here updates the public packages section from Firestore.</p>
+
+        <div class="admin-grid">
+          <div class="admin-list" id="admin-list" aria-live="polite"></div>
+
+          <form class="admin-form" id="admin-form" hidden>
+            <input type="hidden" id="admin-id">
+            <div class="admin-field">
+              <label for="admin-name">Package name</label>
+              <input id="admin-name" type="text" maxlength="100" required>
+            </div>
+            <div class="admin-field">
+              <label for="admin-destination">Destination (From Hisar →)</label>
+              <input id="admin-destination" type="text" maxlength="120" placeholder="Alleppey, Kerala" required>
+            </div>
+            <div class="admin-row">
+              <div class="admin-field">
+                <label for="admin-duration">Duration</label>
+                <input id="admin-duration" type="text" maxlength="60" placeholder="5 days · 4 nights" required>
+              </div>
+              <div class="admin-field">
+                <label for="admin-price">Price (₹)</label>
+                <input id="admin-price" type="number" min="1" step="1" required>
+              </div>
+            </div>
+            <div class="admin-row">
+              <div class="admin-field">
+                <label for="admin-discount">Discount (%)</label>
+                <input id="admin-discount" type="number" min="0" max="90" step="1" value="0">
+              </div>
+              <div class="admin-field">
+                <label for="admin-order">Display order</label>
+                <input id="admin-order" type="number" min="0" max="999" step="1" value="0">
+              </div>
+            </div>
+            <div class="admin-field">
+              <label for="admin-image">Image URL</label>
+              <input id="admin-image" type="text" maxlength="600" placeholder="assets/kerala.webp or https://...">
+              <p class="admin-hint">Image upload needs Firebase Storage billing. Paste an image URL for now.</p>
+            </div>
+            <div class="admin-field">
+              <label for="admin-highlights">Highlights (one per line)</label>
+              <textarea id="admin-highlights" rows="4" required></textarea>
+            </div>
+            <label class="admin-check"><input id="admin-visible" type="checkbox" checked> Visible on site</label>
+            <div class="admin-actions">
+              <button class="btn btn-primary btn-small" type="submit">Save package</button>
+              <button class="btn btn-ghost btn-small" id="admin-cancel" type="button">Cancel</button>
+              <button class="btn btn-danger btn-small" id="admin-delete" type="button" hidden>Delete</button>
+            </div>
+            <p class="admin-status" id="admin-status" role="status"></p>
+          </form>
         </div>
       </div>
     </section>
@@ -464,7 +530,9 @@
 
   <script src="assets/vendor/firebase-app-compat.js" defer></script>
   <script src="assets/vendor/firebase-auth-compat.js" defer></script>
+  <script src="assets/vendor/firebase-firestore-compat.js" defer></script>
   <script src="auth.js" defer></script>
+  <script src="admin.js" defer></script>
   <script src="script.js" defer></script>
 </body>
 </html>

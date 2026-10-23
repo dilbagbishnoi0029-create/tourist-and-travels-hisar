@@ -2,6 +2,36 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null
+        && (
+          request.auth.token.email == 'dilbagbishnoi0029@gmail.com'
+          || request.auth.token.email == 'vishavsuthar0@gmail.com'
+        );
+    }
+
+    function validPackage(data) {
+      return data.keys().hasOnly([
+          'name', 'destination', 'duration', 'highlights', 'price',
+          'discountPercent', 'imageUrl', 'visible', 'order', 'updatedAt', 'updatedBy'
+        ])
+        && data.keys().hasAll([
+          'name', 'destination', 'duration', 'highlights', 'price',
+          'discountPercent', 'imageUrl', 'visible', 'order', 'updatedAt', 'updatedBy'
+        ])
+        && data.name is string && data.name.size() >= 2 && data.name.size() <= 100
+        && data.destination is string && data.destination.size() >= 2 && data.destination.size() <= 120
+        && data.duration is string && data.duration.size() >= 2 && data.duration.size() <= 60
+        && data.highlights is list && data.highlights.size() >= 1 && data.highlights.size() <= 8
+        && data.price is number && data.price > 0 && data.price <= 10000000
+        && data.discountPercent is number && data.discountPercent >= 0 && data.discountPercent <= 90
+        && data.imageUrl is string && data.imageUrl.size() <= 600
+        && data.visible is bool
+        && data.order is number && data.order >= 0 && data.order <= 999
+        && data.updatedAt is string && data.updatedAt.size() <= 40
+        && data.updatedBy is string && data.updatedBy.size() <= 120;
+    }
+
     function validEnquiry(data) {
       return data.keys().hasOnly(['name', 'email', 'phone', 'destination', 'message', 'createdAt'])
         && data.keys().hasAll(['name', 'email', 'phone', 'destination', 'message', 'createdAt'])
@@ -12,6 +42,12 @@ service cloud.firestore {
         && data.destination is string && data.destination.size() <= 80
         && data.message is string && data.message.size() <= 1000
         && data.createdAt is string && data.createdAt.size() <= 40;
+    }
+
+    match /packages/{packageId} {
+      allow read: if resource.data.visible == true || isAdmin();
+      allow create, update: if isAdmin() && validPackage(request.resource.data);
+      allow delete: if isAdmin();
     }
 
     match /enquiries/{enquiryId} {
