@@ -57,16 +57,11 @@
   const arrow = `<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10h11M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
   const renderSite = (packages) => {
-    const destinationSelect = document.getElementById("enquiry-destination");
-    if (destinationSelect) {
-      const previous = destinationSelect.value;
-      destinationSelect.innerHTML =
-        `<option value="">Choose a journey</option>` +
-        packages.map((pkg) => `<option>${escapeHtml(pkg.name)}</option>`).join("") +
-        `<option>Somewhere else in India</option>`;
-      if ([...destinationSelect.options].some((option) => option.value === previous)) {
-        destinationSelect.value = previous;
-      }
+    const destinationList = document.getElementById("destination-options");
+    if (destinationList) {
+      destinationList.innerHTML =
+        packages.map((pkg) => `<option value="${escapeHtml(pkg.name)}"></option>`).join("") +
+        `<option value="Somewhere else in India"></option>`;
     }
 
     if (!packages.length) {
@@ -206,6 +201,13 @@
   const loadAdmin = async () => {
     const snapshot = await db.collection("packages").get();
     const packages = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const destinationList = document.getElementById("admin-destination-options");
+    if (destinationList) {
+      const destinations = [...new Set(packages.map((pkg) => pkg.destination).filter(Boolean))].sort();
+      destinationList.innerHTML = destinations
+        .map((destination) => `<option value="${escapeHtml(destination)}"></option>`)
+        .join("");
+    }
     renderAdminList(packages);
     return packages;
   };

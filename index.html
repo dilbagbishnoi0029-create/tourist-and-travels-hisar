@@ -317,7 +317,8 @@
             </div>
             <div class="admin-field">
               <label for="admin-destination">Destination (From Hisar →)</label>
-              <input id="admin-destination" type="text" maxlength="120" placeholder="Alleppey, Kerala" required>
+              <input id="admin-destination" type="text" maxlength="120" list="admin-destination-options" placeholder="Alleppey, Kerala" required>
+              <datalist id="admin-destination-options"></datalist>
             </div>
             <div class="admin-row">
               <div class="admin-field">
@@ -391,16 +392,16 @@
 
           <div class="form-row">
             <label for="enquiry-destination">Destination</label>
-            <select id="enquiry-destination" name="destination" required>
-              <option value="">Choose a journey</option>
-              <option>Kerala Backwaters</option>
-              <option>Rajasthan Heritage</option>
-              <option>Ladakh High Passes</option>
-              <option>Goa, Slowly</option>
-              <option>Meghalaya in the Mist</option>
-              <option>Andaman Blue</option>
-              <option>Somewhere else in India</option>
-            </select>
+            <input id="enquiry-destination" name="destination" type="text" list="destination-options" autocomplete="off" maxlength="120" placeholder="Type or choose a destination" required>
+            <datalist id="destination-options">
+              <option value="Kerala Backwaters"></option>
+              <option value="Rajasthan Heritage"></option>
+              <option value="Ladakh High Passes"></option>
+              <option value="Goa, Slowly"></option>
+              <option value="Meghalaya in the Mist"></option>
+              <option value="Andaman Blue"></option>
+              <option value="Somewhere else in India"></option>
+            </datalist>
           </div>
 
           <div class="form-row">
