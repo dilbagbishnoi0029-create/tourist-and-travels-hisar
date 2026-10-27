@@ -10,6 +10,7 @@
     "Shillong", "Aizawl", "Kohima", "Bhubaneswar", "Jaipur", "Gangtok",
     "Chennai", "Hyderabad", "Agartala", "Lucknow", "Dehradun", "Kolkata",
   ];
+  let autocompleteAttached = false;
   const routeDistances = {
     Delhi: 165, Chandigarh: 245, Jodhpur: 460, Bhopal: 780, Mumbai: 1400,
     Imphal: 2300, Shillong: 1900, Aizawl: 2400, Kohima: 2400,
@@ -25,6 +26,7 @@
   const result = document.getElementById("taxi-result");
   const note = document.getElementById("taxi-note");
   const chips = document.getElementById("taxi-chips");
+  const mapContainer = document.getElementById("taxi-map");
   const destinationResult = document.getElementById("taxi-destination-result");
   const distanceResult = document.getElementById("taxi-distance");
   const roundResult = document.getElementById("taxi-round");
@@ -78,6 +80,64 @@
     });
   };
 
+  const showMap = async (destination) => {
+    if (!mapContainer) return;
+    if (!MAPS_KEY || MAPS_KEY === "YOUR_GOOGLE_MAPS_API_KEY") {
+      mapContainer.hidden = true;
+      return;
+    }
+    mapContainer.hidden = false;
+    try {
+      await loadMaps();
+      const origin = { lat: 29.1492, lng: 75.7217 };
+      const map = new window.google.maps.Map(mapContainer, {
+        center: origin,
+        zoom: 6,
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+      });
+      const service = new window.google.maps.DirectionsService();
+      const renderer = new window.google.maps.DirectionsRenderer({
+        map,
+        polylineOptions: { strokeColor: "#e6b45e", strokeWeight: 4 },
+      });
+      const route = await new Promise((resolve, reject) => {
+        service.route(
+          { origin: ORIGIN, destination, travelMode: window.google.maps.TravelMode.DRIVING },
+          (response, status) => {
+            if (status === "OK") resolve(response);
+            else reject(new Error(status));
+          }
+        );
+      });
+      renderer.setDirections(route);
+    } catch {
+      try {
+        await loadMaps();
+        const geocoder = new window.google.maps.Geocoder();
+        const places = await new Promise((resolve, reject) => {
+          geocoder.geocode({ address: destination }, (results, status) => {
+            if (status === "OK") resolve(results);
+            else reject(new Error(status));
+          });
+        });
+        const position = places[0].geometry.location;
+        const map = new window.google.maps.Map(mapContainer, {
+          center: position,
+          zoom: 8,
+          mapTypeControl: false,
+          streetViewControl: false,
+          fullscreenControl: false,
+        });
+        new window.google.maps.Marker({ position, map, title: destination });
+        new window.google.maps.Marker({ position: { lat: 29.1492, lng: 75.7217 }, map, title: "Hisar" });
+      } catch {
+        mapContainer.hidden = true;
+      }
+    }
+  };
+
   const renderChips = () => {
     if (!chips) return;
     chips.innerHTML = "";
@@ -101,8 +161,6 @@
       input.focus();
       return;
     }
-
-    const toll = tollValue();
 
     if (!MAPS_KEY || MAPS_KEY === "YOUR_GOOGLE_MAPS_API_KEY") {
       const fallbackDistance = findRouteDistance(destination);
@@ -128,10 +186,12 @@
           document.getElementById("enquiry")?.scrollIntoView({ behavior: "smooth", block: "start" });
         };
         result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        if (mapContainer) mapContainer.hidden = true;
         return;
       }
 
       setNote("Google Maps is not configured yet. Quick-route chips show approximate fares for listed destinations. Replace YOUR_GOOGLE_MAPS_API_KEY in taxi.js for live distance to any place. Fares are ₹16/km round trip.");
+      if (mapContainer) mapContainer.hidden = true;
       return;
     }
 
@@ -199,7 +259,9 @@
       };
 
       result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      showMap(resolved);
     } catch {
+      if (mapContainer) mapContainer.hidden = true;
       result.hidden = false;
       destinationResult.textContent = destination;
       distanceResult.textContent = "—";
@@ -213,6 +275,35 @@
     }
   };
 
+  const ensureAutocomplete = async () => {
+    if (autocompleteAttached || !MAPS_KEY || MAPS_KEY === "YOUR_GOOGLE_MAPS_API_KEY") return;
+    try {
+      await loadMaps();
+      if (window.google?.maps?.places && !autocompleteAttached) {
+        const autocomplete = new window.google.maps.places.Autocomplete(input, {
+          types: ["geocode"],
+          fields: ["formatted_address", "name"],
+        });
+        autocomplete.addListener("place_changed", () => {
+          const place = autocomplete.getPlace();
+          if (place?.formatted_address) {
+            input.value = place.formatted_address;
+            estimate();
+          }
+        });
+        autocompleteAttached = true;
+      }
+    } catch {
+      // Keep the text input usable even if Maps fails to load.
+    }
+  };
+
+  input.addEventListener("focus", () => {
+    ensureAutocomplete();
+  });
+  input.addEventListener("change", () => {
+    if (input.value.trim()) estimate();
+  });
   input.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -222,9 +313,7 @@
   estimateButton.addEventListener("click", estimate);
   renderChips();
   if (MAPS_KEY === "YOUR_GOOGLE_MAPS_API_KEY") {
-    setNote("Google Maps is not configured yet. Replace YOUR_GOOGLE_MAPS_API_KEY in taxi.js with your key (Maps JavaScript API, Places API, Distance Matrix API) to enable live estimates. Fares are ₹16/km round trip.");
-    estimateButton.disabled = true;
-    estimateButton.setAttribute("aria-disabled", "true");
+    setNote("Google Maps is not configured yet. Quick-route chips show approximate fares for listed destinations. Type a destination and click Estimate, or add your Google Maps API key for live distance to any place. Fares are ₹16/km round trip.");
   } else {
     setNote("");
   }

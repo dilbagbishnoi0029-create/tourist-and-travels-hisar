@@ -1539,6 +1539,15 @@ h3 {
   padding-left: 28px;
 }
 
+.taxi-map {
+  margin-top: 18px;
+  min-height: 280px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #0a1017;
+}
+
 .taxi-note {
   margin: 16px 0 0;
   color: var(--muted);
