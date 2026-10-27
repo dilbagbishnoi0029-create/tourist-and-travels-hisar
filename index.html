@@ -156,7 +156,10 @@
             </div>
             <div class="taxi-field taxi-field-small">
               <label for="taxi-toll">Tolls (₹)</label>
-              <input id="taxi-toll" type="number" min="0" step="10" value="0" inputmode="numeric">
+              <div class="currency-input">
+                <span class="currency-prefix" aria-hidden="true">₹</span>
+                <input id="taxi-toll" type="number" min="0" step="10" value="0" inputmode="numeric">
+              </div>
             </div>
             <button class="btn btn-primary" id="taxi-estimate" type="button">Estimate fare</button>
           </div>

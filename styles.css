@@ -1521,6 +1521,24 @@ h3 {
   margin-top: 18px;
 }
 
+.currency-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.currency-input .currency-prefix {
+  position: absolute;
+  left: 12px;
+  color: var(--accent);
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.currency-input input {
+  padding-left: 28px;
+}
+
 .taxi-note {
   margin: 16px 0 0;
   color: var(--muted);
