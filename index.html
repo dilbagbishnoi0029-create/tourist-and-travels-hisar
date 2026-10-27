@@ -39,6 +39,7 @@
           <li><a class="nav-link" href="#about">About</a></li>
           <li><a class="nav-link" href="#packages">Packages</a></li>
           <li><a class="nav-link" href="#testimonials">Testimonials</a></li>
+          <li><a class="nav-link" href="#taxi">Taxi</a></li>
           <li><a class="nav-link admin-link" id="admin-link" href="#admin-panel" hidden>Admin</a></li>
         </ul>
         <a class="btn btn-primary btn-small" href="https://wa.me/919996095229?text=Hi%20Tourist%20and%20Travels%2C%20I%27d%20like%20to%20plan%20a%20trip." target="_blank" rel="noopener">Plan your trip</a>
@@ -421,6 +422,50 @@
       </div>
     </section>
 
+    <section class="section taxi" id="taxi" aria-labelledby="taxi-title">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Taxi from Hisar</p>
+            <h2 id="taxi-title">Go anywhere. We’ll drive you there.</h2>
+          </div>
+          <p class="section-lede">Estimate a round trip at ₹16/km. Type any destination, or pick a common route.</p>
+        </div>
+
+        <div class="taxi-card">
+          <div class="taxi-controls">
+            <div class="taxi-field">
+              <label for="taxi-destination">Destination</label>
+              <input id="taxi-destination" type="text" placeholder="Type a place, e.g. Delhi, Rishikesh, Jaipur" autocomplete="off">
+            </div>
+            <button class="btn btn-primary" id="taxi-estimate" type="button">Estimate fare</button>
+          </div>
+
+          <div class="taxi-quick">
+            <span class="taxi-quick-label">Quick routes</span>
+            <div class="taxi-chips" id="taxi-chips"></div>
+          </div>
+
+          <div class="taxi-result" id="taxi-result" hidden>
+            <div class="taxi-result-grid">
+              <div><span class="taxi-result-label">Destination</span><strong id="taxi-destination-result"></strong></div>
+              <div><span class="taxi-result-label">One-way distance</span><strong id="taxi-distance"></strong></div>
+              <div><span class="taxi-result-label">Round trip</span><strong id="taxi-round"></strong></div>
+              <div><span class="taxi-result-label">Estimated fare</span><strong id="taxi-fare"></strong></div>
+            </div>
+            <p class="taxi-disclaimer" id="taxi-disclaimer"></p>
+            <div class="taxi-actions">
+              <a class="btn btn-primary" id="taxi-whatsapp" href="https://wa.me/919996095229" target="_blank" rel="noopener">Book on WhatsApp</a>
+              <a class="btn btn-ghost" id="taxi-call" href="tel:+919996095229">Call taxi</a>
+              <button class="btn btn-ghost" id="taxi-enquiry" type="button">Send enquiry</button>
+            </div>
+          </div>
+
+          <p class="taxi-note" id="taxi-note"></p>
+        </div>
+      </div>
+    </section>
+
     <section class="section testimonials" id="testimonials" aria-labelledby="testimonials-title">
       <div class="container">
         <div class="section-head">
@@ -534,6 +579,7 @@
   <script src="assets/vendor/firebase-firestore-compat.js" defer></script>
   <script src="auth.js" defer></script>
   <script src="admin.js" defer></script>
+  <script src="taxi.js" defer></script>
   <script src="script.js" defer></script>
 </body>
 </html>

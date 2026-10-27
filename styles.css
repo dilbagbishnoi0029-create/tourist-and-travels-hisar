@@ -1385,6 +1385,165 @@ h3 {
   }
 }
 
+/* ---------- Taxi ---------- */
+
+.taxi {
+  background:
+    radial-gradient(circle at 85% 12%, rgba(230, 180, 94, 0.08), transparent 42%),
+    var(--bg-soft);
+}
+
+.taxi-card {
+  padding: 30px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.taxi-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.taxi-field label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.taxi-field input {
+  width: 100%;
+  min-height: 50px;
+  padding: 11px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: #0a1017;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+.taxi-field input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: transparent;
+}
+
+.taxi-quick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-top: 18px;
+}
+
+.taxi-quick-label {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.taxi-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.taxi-chip {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: 600 0.78rem/1 var(--font-body);
+  cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.taxi-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(230, 180, 94, 0.07);
+}
+
+.taxi-result {
+  margin-top: 24px;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+}
+
+.taxi-result-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.taxi-result-label {
+  display: block;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.taxi-result-grid strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1.1;
+}
+
+.taxi-disclaimer {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.taxi-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.taxi-note {
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .taxi-result-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .taxi-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .taxi-result-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ---------- Testimonials ---------- */
 
 .testimonials {
