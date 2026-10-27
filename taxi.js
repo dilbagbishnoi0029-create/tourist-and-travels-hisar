@@ -21,7 +21,6 @@
   if (!section) return;
 
   const input = document.getElementById("taxi-destination");
-  const tollInput = document.getElementById("taxi-toll");
   const estimateButton = document.getElementById("taxi-estimate");
   const result = document.getElementById("taxi-result");
   const note = document.getElementById("taxi-note");
@@ -29,8 +28,6 @@
   const destinationResult = document.getElementById("taxi-destination-result");
   const distanceResult = document.getElementById("taxi-distance");
   const roundResult = document.getElementById("taxi-round");
-  const distanceFareResult = document.getElementById("taxi-distance-fare");
-  const tollResult = document.getElementById("taxi-toll-result");
   const fareResult = document.getElementById("taxi-fare");
   const disclaimer = document.getElementById("taxi-disclaimer");
   const whatsapp = document.getElementById("taxi-whatsapp");
@@ -51,7 +48,6 @@
   const money = (value) =>
     `₹${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(Math.max(0, Math.round(value)))}`;
 
-  const tollValue = () => Math.max(0, Number(tollInput?.value) || 0);
   const findRouteDistance = (value) => {
     const key = Object.keys(routeDistances).find((item) => item.toLowerCase() === String(value || "").trim().toLowerCase());
     return key ? routeDistances[key] : null;
@@ -115,12 +111,10 @@
         destinationResult.textContent = destination;
         distanceResult.textContent = `${fallbackDistance.toFixed(1)} km`;
         roundResult.textContent = `${(fallbackDistance * 2).toFixed(1)} km`;
-        distanceFareResult.textContent = money(Math.round(fallbackDistance * 2 * RATE));
-        tollResult.textContent = money(toll);
-        fareResult.textContent = money(Math.round(fallbackDistance * 2 * RATE) + toll);
-        disclaimer.textContent = "Approximate distance for this listed route. Live Google Maps is not configured, so tolls and parking are added manually. Final fare may vary.";
+        fareResult.textContent = money(Math.round(fallbackDistance * 2 * RATE));
+        disclaimer.textContent = "Approximate distance for this listed route. Live Google Maps is not configured, so the final fare may vary. Tolls and parking are extra.";
         const message = encodeURIComponent(
-          `Hi Tourist and Travels, I need a taxi from Hisar to ${destination}. Approximate distance: ${fallbackDistance.toFixed(1)} km one way / ${(fallbackDistance * 2).toFixed(1)} km round trip. Distance fare: ₹${Math.round(fallbackDistance * 2 * RATE)}. Tolls: ₹${toll}. Estimated fare: ₹${Math.round(fallbackDistance * 2 * RATE) + toll}.`
+          `Hi Tourist and Travels, I need a taxi from Hisar to ${destination}. Approximate distance: ${fallbackDistance.toFixed(1)} km one way / ${(fallbackDistance * 2).toFixed(1)} km round trip. Estimated fare: ₹${Math.round(fallbackDistance * 2 * RATE)}.`
         );
         whatsapp.href = `https://wa.me/${WHATSAPP}?text=${message}`;
         call.href = `tel:+${WHATSAPP}`;
@@ -129,7 +123,7 @@
           const messageField = document.getElementById("enquiry-message");
           if (destinationField) destinationField.value = destination;
           if (messageField && !messageField.value.trim()) {
-            messageField.value = `Taxi enquiry: Hisar to ${destination}, estimated fare ₹${Math.round(fallbackDistance * 2 * RATE) + toll}.`;
+            messageField.value = `Taxi enquiry: Hisar to ${destination}, estimated fare ₹${Math.round(fallbackDistance * 2 * RATE)}.`;
           }
           document.getElementById("enquiry")?.scrollIntoView({ behavior: "smooth", block: "start" });
         };
@@ -180,21 +174,17 @@
       const resolved = response.destinationAddresses?.[0] || destination;
       const oneWayKm = element.distance.value / 1000;
       const roundKm = oneWayKm * 2;
-      const toll = Math.max(0, Number(tollInput?.value) || 0);
-      const distanceFare = Math.round(roundKm * RATE);
-      const fare = distanceFare + toll;
+      const fare = Math.round(roundKm * RATE);
 
       result.hidden = false;
       destinationResult.textContent = resolved;
       distanceResult.textContent = `${oneWayKm.toFixed(1)} km`;
       roundResult.textContent = `${roundKm.toFixed(1)} km`;
-      distanceFareResult.textContent = `${money(distanceFare)}`;
-      tollResult.textContent = money(toll);
       fareResult.textContent = money(fare);
-      disclaimer.textContent = "Estimate only. Final fare may vary with tolls, parking, night charges, and vehicle type. Tolls entered: " + money(toll) + ".";
+      disclaimer.textContent = "Estimate only. Final fare may vary with tolls, parking, night charges, and vehicle type.";
 
       const message = encodeURIComponent(
-        `Hi Tourist and Travels, I need a taxi from Hisar to ${resolved}. Estimated distance: ${oneWayKm.toFixed(1)} km one way / ${roundKm.toFixed(1)} km round trip. Distance fare: ₹${distanceFare}. Tolls: ₹${toll}. Estimated fare: ₹${fare}.`
+        `Hi Tourist and Travels, I need a taxi from Hisar to ${resolved}. Estimated distance: ${oneWayKm.toFixed(1)} km one way / ${roundKm.toFixed(1)} km round trip. Estimated fare: ₹${fare}.`
       );
       whatsapp.href = `https://wa.me/${WHATSAPP}?text=${message}`;
       call.href = `tel:+${WHATSAPP}`;
@@ -214,8 +204,6 @@
       destinationResult.textContent = destination;
       distanceResult.textContent = "—";
       roundResult.textContent = "—";
-      distanceFareResult.textContent = "—";
-      tollResult.textContent = "—";
       fareResult.textContent = "—";
       disclaimer.textContent = "Could not calculate the distance. Check the destination spelling or add a valid Google Maps API key.";
       showToast("Distance calculation failed. Please try another destination.");
@@ -230,12 +218,6 @@
       event.preventDefault();
       estimate();
     }
-  });
-  tollInput?.addEventListener("change", () => {
-    if (!result.hidden) estimate();
-  });
-  tollInput?.addEventListener("input", () => {
-    if (!result.hidden) estimate();
   });
   estimateButton.addEventListener("click", estimate);
   renderChips();
