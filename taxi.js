@@ -10,6 +10,12 @@
     "Shillong", "Aizawl", "Kohima", "Bhubaneswar", "Jaipur", "Gangtok",
     "Chennai", "Hyderabad", "Agartala", "Lucknow", "Dehradun", "Kolkata",
   ];
+  const routeDistances = {
+    Delhi: 165, Chandigarh: 245, Jodhpur: 460, Bhopal: 780, Mumbai: 1400,
+    Imphal: 2300, Shillong: 1900, Aizawl: 2400, Kohima: 2400,
+    Bhubaneswar: 1600, Jaipur: 320, Gangtok: 1600, Chennai: 2300,
+    Hyderabad: 1500, Agartala: 2000, Lucknow: 600, Dehradun: 260, Kolkata: 1500,
+  };
 
   const section = document.getElementById("taxi");
   if (!section) return;
@@ -44,6 +50,12 @@
 
   const money = (value) =>
     `₹${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(Math.max(0, Math.round(value)))}`;
+
+  const tollValue = () => Math.max(0, Number(tollInput?.value) || 0);
+  const findRouteDistance = (value) => {
+    const key = Object.keys(routeDistances).find((item) => item.toLowerCase() === String(value || "").trim().toLowerCase());
+    return key ? routeDistances[key] : null;
+  };
 
   const setNote = (message) => {
     if (!note) return;
@@ -94,8 +106,38 @@
       return;
     }
 
+    const toll = tollValue();
+
     if (!MAPS_KEY || MAPS_KEY === "YOUR_GOOGLE_MAPS_API_KEY") {
-      setNote("Google Maps is not configured yet. Replace YOUR_GOOGLE_MAPS_API_KEY in taxi.js with your key (Maps JavaScript API, Places API, Distance Matrix API) to enable live estimates. Fares are ₹16/km round trip.");
+      const fallbackDistance = findRouteDistance(destination);
+      if (fallbackDistance) {
+        result.hidden = false;
+        destinationResult.textContent = destination;
+        distanceResult.textContent = `${fallbackDistance.toFixed(1)} km`;
+        roundResult.textContent = `${(fallbackDistance * 2).toFixed(1)} km`;
+        distanceFareResult.textContent = money(Math.round(fallbackDistance * 2 * RATE));
+        tollResult.textContent = money(toll);
+        fareResult.textContent = money(Math.round(fallbackDistance * 2 * RATE) + toll);
+        disclaimer.textContent = "Approximate distance for this listed route. Live Google Maps is not configured, so tolls and parking are added manually. Final fare may vary.";
+        const message = encodeURIComponent(
+          `Hi Tourist and Travels, I need a taxi from Hisar to ${destination}. Approximate distance: ${fallbackDistance.toFixed(1)} km one way / ${(fallbackDistance * 2).toFixed(1)} km round trip. Distance fare: ₹${Math.round(fallbackDistance * 2 * RATE)}. Tolls: ₹${toll}. Estimated fare: ₹${Math.round(fallbackDistance * 2 * RATE) + toll}.`
+        );
+        whatsapp.href = `https://wa.me/${WHATSAPP}?text=${message}`;
+        call.href = `tel:+${WHATSAPP}`;
+        enquiryButton.onclick = () => {
+          const destinationField = document.getElementById("enquiry-destination");
+          const messageField = document.getElementById("enquiry-message");
+          if (destinationField) destinationField.value = destination;
+          if (messageField && !messageField.value.trim()) {
+            messageField.value = `Taxi enquiry: Hisar to ${destination}, estimated fare ₹${Math.round(fallbackDistance * 2 * RATE) + toll}.`;
+          }
+          document.getElementById("enquiry")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        };
+        result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        return;
+      }
+
+      setNote("Google Maps is not configured yet. Quick-route chips show approximate fares for listed destinations. Replace YOUR_GOOGLE_MAPS_API_KEY in taxi.js for live distance to any place. Fares are ₹16/km round trip.");
       return;
     }
 
@@ -190,6 +232,9 @@
     }
   });
   tollInput?.addEventListener("change", () => {
+    if (!result.hidden) estimate();
+  });
+  tollInput?.addEventListener("input", () => {
     if (!result.hidden) estimate();
   });
   estimateButton.addEventListener("click", estimate);
