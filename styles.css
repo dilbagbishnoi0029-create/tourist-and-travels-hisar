@@ -1811,16 +1811,32 @@ h3 {
 }
 
 .back-top {
-  display: inline-flex;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
   align-items: center;
-  min-height: 44px;
-  color: var(--text);
-  text-decoration: none;
-  transition: color 160ms ease;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: var(--bg);
+  opacity: 0;
+  visibility: hidden;
+  font-size: 1.25rem;
+  z-index: 99;
+  transition: opacity .2s ease, visibility .2s ease;
+}
+
+.back-top.visible {
+  opacity: 1;
+  visibility: visible;
 }
 
 .back-top:hover {
-  color: var(--accent);
+  color: var(--accent-strong);
+  background: var(--accent-strong);
 }
 
 /* ---------- Responsive ---------- */
