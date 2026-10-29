@@ -28,7 +28,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: calc(var(--header-h) + 20px);
+  scroll-padding-top: calc(var(--header-h) + 60px);
 }
 
 body {
@@ -130,6 +130,57 @@ h3 {
 }
 
 /* ---------- Header ---------- */
+
+.topbar {
+  border-bottom: 1px solid var(--border);
+  background: rgba(10, 16, 23, 0.55);
+}
+
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 40px;
+}
+
+.topbar-note {
+  color: var(--muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+}
+
+.topbar-call {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  color: var(--accent-strong);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.topbar-call svg {
+  flex: 0 0 auto;
+}
+
+.topbar-call:hover,
+.topbar-call:focus-visible {
+  color: var(--text);
+}
+
+@media (max-width: 520px) {
+  .topbar-note {
+    display: none;
+  }
+
+  .topbar-inner {
+    justify-content: center;
+  }
+}
 
 .site-header {
   position: sticky;
