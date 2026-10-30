@@ -8,6 +8,7 @@
   <meta name="theme-color" content="#070b10">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="Tourist and Travels | Curated Journeys Across India">
@@ -155,7 +156,8 @@
           <div class="taxi-controls">
             <div class="taxi-field">
               <label for="taxi-destination">Destination</label>
-              <input id="taxi-destination" type="text" placeholder="Type a place, e.g. Delhi, Rishikesh, Jaipur" autocomplete="off">
+              <input id="taxi-destination" type="text" placeholder="Type a place, e.g. Delhi, Rishikesh, Jaipur" autocomplete="off" list="taxi-suggestions">
+              <datalist id="taxi-suggestions"></datalist>
             </div>
             <button class="btn btn-primary" id="taxi-estimate" type="button">Estimate fare</button>
           </div>
@@ -167,9 +169,11 @@
 
           <div class="taxi-result" id="taxi-result" hidden>
             <div class="taxi-result-grid">
+              <div><span class="taxi-result-label">Pickup</span><strong>Hisar, Haryana</strong></div>
               <div><span class="taxi-result-label">Destination</span><strong id="taxi-destination-result"></strong></div>
               <div><span class="taxi-result-label">One-way distance</span><strong id="taxi-distance"></strong></div>
               <div><span class="taxi-result-label">Round trip</span><strong id="taxi-round"></strong></div>
+              <div><span class="taxi-result-label">Drive time</span><strong id="taxi-duration"></strong></div>
               <div><span class="taxi-result-label">Estimated fare</span><strong id="taxi-fare"></strong></div>
             </div>
             <div class="taxi-map" id="taxi-map" hidden></div>
@@ -581,6 +585,7 @@
   <script src="assets/vendor/firebase-app-compat.js" defer></script>
   <script src="assets/vendor/firebase-auth-compat.js" defer></script>
   <script src="assets/vendor/firebase-firestore-compat.js" defer></script>
+  <script src="assets/vendor/leaflet/leaflet.js" defer></script>
   <script src="auth.js" defer></script>
   <script src="admin.js" defer></script>
   <script src="taxi.js" defer></script>
