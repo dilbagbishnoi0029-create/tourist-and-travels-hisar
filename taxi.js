@@ -24,12 +24,17 @@
 
   let autocompleteAttached = false;
   let leafletPromise = null;
+  let selectedPlace = null;
+  let searchTimer = null;
+  let activeSuggestion = -1;
+  let suggestionResults = [];
+  const suggestionCache = new Map();
 
   const section = document.getElementById("taxi");
   if (!section) return;
 
   const input = document.getElementById("taxi-destination");
-  const suggestions = document.getElementById("taxi-suggestions");
+  const suggestionList = document.getElementById("taxi-suggestions-list");
   const estimateButton = document.getElementById("taxi-estimate");
   const result = document.getElementById("taxi-result");
   const note = document.getElementById("taxi-note");
@@ -154,6 +159,91 @@
       geometry: route.geometry,
       label: place.label,
     };
+  };
+
+  const hideSuggestions = () => {
+    if (!suggestionList) return;
+    suggestionList.hidden = true;
+    suggestionList.innerHTML = "";
+    suggestionList.setAttribute("aria-activedescendant", "");
+    input.setAttribute("aria-expanded", "false");
+    suggestionResults = [];
+    activeSuggestion = -1;
+  };
+
+  const chooseSuggestion = (index) => {
+    const place = suggestionResults[index];
+    if (!place) return;
+    selectedPlace = place;
+    input.value = place.label;
+    hideSuggestions();
+    estimate();
+  };
+
+  const renderSuggestions = (results) => {
+    if (!suggestionList) return;
+    suggestionList.innerHTML = "";
+    suggestionResults = results;
+    activeSuggestion = -1;
+    if (!results.length) {
+      const item = document.createElement("li");
+      item.className = "is-static";
+      item.textContent = "No place found. Try adding the district or state name.";
+      suggestionList.append(item);
+      suggestionList.hidden = false;
+      input.setAttribute("aria-expanded", "true");
+      return;
+    }
+    results.forEach((place, index) => {
+      const item = document.createElement("li");
+      item.id = `taxi-suggestion-${index}`;
+      item.setAttribute("role", "option");
+      item.setAttribute("aria-selected", "false");
+      const title = document.createElement("strong");
+      title.textContent = place.label;
+      item.append(title);
+      if (place.full && place.full !== place.label) {
+        const detail = document.createElement("span");
+        detail.textContent = place.full;
+        item.append(detail);
+      }
+      item.addEventListener("mousedown", (event) => {
+        event.preventDefault();
+        chooseSuggestion(index);
+      });
+      suggestionList.append(item);
+    });
+    suggestionList.hidden = false;
+    input.setAttribute("aria-expanded", "true");
+  };
+
+  const fetchSuggestions = async (query) => {
+    if (suggestionCache.has(query)) return suggestionCache.get(query);
+    const url = `${NOMINATIM}?format=jsonv2&limit=6&addressdetails=1&countrycodes=in&q=${encodeURIComponent(query)}`;
+    try {
+      const response = await fetch(url, { headers: { Accept: "application/json" } });
+      if (!response.ok) return [];
+      const data = await response.json();
+      const results = (Array.isArray(data) ? data : [])
+        .map((item) => {
+          const parts = String(item.display_name || "")
+            .split(",")
+            .map((part) => part.trim())
+            .filter(Boolean);
+          return {
+            lat: Number(item.lat),
+            lng: Number(item.lon),
+            label: parts.slice(0, 3).join(", "),
+            full: parts.join(", "),
+          };
+        })
+        .filter((item) => Number.isFinite(item.lat) && Number.isFinite(item.lng) && item.label)
+        .filter((item, index, list) => list.findIndex((other) => other.label.toLowerCase() === item.label.toLowerCase()) === index);
+      suggestionCache.set(query, results);
+      return results;
+    } catch {
+      return [];
+    }
   };
 
   const clearMapLayers = (map) => {
@@ -294,6 +384,7 @@
         button.className = "taxi-chip";
         button.textContent = destination;
         button.addEventListener("click", () => {
+          selectedPlace = null;
           input.value = destination;
           estimate();
         });
@@ -301,14 +392,6 @@
       });
     }
 
-    if (suggestions) {
-      suggestions.innerHTML = "";
-      quickRoutes.forEach((destination) => {
-        const option = document.createElement("option");
-        option.value = destination;
-        suggestions.append(option);
-      });
-    }
   };
 
   const estimate = async () => {
@@ -324,7 +407,11 @@
       estimateButton.textContent = "Finding route…";
       setNote("Searching the live route from Hisar…");
       try {
-        const place = await geocodeDestination(destination);
+        const place =
+          selectedPlace && selectedPlace.label === destination
+            ? selectedPlace
+            : await geocodeDestination(destination);
+        selectedPlace = place;
         const route = await fetchOsrmRoute(place);
         applyResult({
           destination: place.label,
@@ -428,13 +515,45 @@
   input.addEventListener("focus", () => {
     ensureAutocomplete();
   });
-  input.addEventListener("change", () => {
-    if (input.value.trim()) estimate();
+  input.addEventListener("input", () => {
+    selectedPlace = null;
+    const query = input.value.trim();
+    clearTimeout(searchTimer);
+    if (query.length < 2) {
+      hideSuggestions();
+      return;
+    }
+    searchTimer = setTimeout(async () => {
+      const results = await fetchSuggestions(query);
+      if (input.value.trim() !== query) return;
+      renderSuggestions(results);
+    }, 550);
+  });
+  input.addEventListener("blur", () => {
+    setTimeout(hideSuggestions, 160);
   });
   input.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
+    const items = suggestionList ? Array.from(suggestionList.querySelectorAll('li[role="option"]')) : [];
+    if (event.key === "ArrowDown" && items.length) {
       event.preventDefault();
-      estimate();
+      activeSuggestion = (activeSuggestion + 1) % items.length;
+      items.forEach((item, index) => item.setAttribute("aria-selected", index === activeSuggestion ? "true" : "false"));
+      input.setAttribute("aria-activedescendant", items[activeSuggestion].id);
+    } else if (event.key === "ArrowUp" && items.length) {
+      event.preventDefault();
+      activeSuggestion = (activeSuggestion - 1 + items.length) % items.length;
+      items.forEach((item, index) => item.setAttribute("aria-selected", index === activeSuggestion ? "true" : "false"));
+      input.setAttribute("aria-activedescendant", items[activeSuggestion].id);
+    } else if (event.key === "Escape") {
+      hideSuggestions();
+    } else if (event.key === "Enter") {
+      event.preventDefault();
+      if (activeSuggestion >= 0 && suggestionResults[activeSuggestion]) {
+        chooseSuggestion(activeSuggestion);
+      } else {
+        hideSuggestions();
+        estimate();
+      }
     }
   });
   estimateButton.addEventListener("click", estimate);

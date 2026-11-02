@@ -1480,6 +1480,59 @@ h3 {
   font-size: 0.95rem;
 }
 
+.taxi-field {
+  position: relative;
+}
+
+.taxi-search {
+  position: relative;
+}
+
+.taxi-suggestions {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 280px;
+  margin: 0;
+  padding: 6px;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: #0f1722;
+  box-shadow: var(--shadow-sm);
+}
+
+.taxi-suggestions li {
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.88rem;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.taxi-suggestions li span {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.taxi-suggestions li[aria-selected="true"],
+.taxi-suggestions li:hover {
+  background: rgba(230, 180, 94, 0.12);
+  color: var(--accent-strong);
+}
+
+.taxi-suggestions li.is-static {
+  color: var(--muted);
+  font-size: 0.82rem;
+  cursor: default;
+}
+
 .taxi-field input:focus {
   outline: 2px solid var(--accent);
   outline-offset: 1px;

@@ -155,9 +155,11 @@
         <div class="taxi-card">
           <div class="taxi-controls">
             <div class="taxi-field">
-              <label for="taxi-destination">Destination</label>
-              <input id="taxi-destination" type="text" placeholder="Type a place, e.g. Delhi, Rishikesh, Jaipur" autocomplete="off" list="taxi-suggestions">
-              <datalist id="taxi-suggestions"></datalist>
+              <label for="taxi-destination">Pickup / destination</label>
+              <div class="taxi-search">
+                <input id="taxi-destination" type="text" placeholder="Type any place — city, village, landmark" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="taxi-suggestions-list">
+                <ul class="taxi-suggestions" id="taxi-suggestions-list" role="listbox" hidden></ul>
+              </div>
             </div>
             <button class="btn btn-primary" id="taxi-estimate" type="button">Estimate fare</button>
           </div>
