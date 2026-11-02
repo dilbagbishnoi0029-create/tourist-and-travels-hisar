@@ -172,6 +172,42 @@ h3 {
   color: var(--text);
 }
 
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.topbar-install {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  font: 600 0.8rem/1 var(--font-body);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+
+.topbar-install svg {
+  flex: 0 0 auto;
+}
+
+.topbar-install:hover,
+.topbar-install:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+  background: rgba(230, 180, 94, 0.07);
+}
+
+.topbar-install[hidden] {
+  display: none;
+}
+
 @media (max-width: 520px) {
   .topbar-note {
     display: none;
@@ -179,6 +215,14 @@ h3 {
 
   .topbar-inner {
     justify-content: center;
+  }
+
+  .topbar-actions {
+    gap: 10px;
+  }
+
+  .topbar-install {
+    padding-inline: 10px;
   }
 }
 

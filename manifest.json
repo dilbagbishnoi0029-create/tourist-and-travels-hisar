@@ -1,0 +1,60 @@
+{
+  "name": "Tourist and Travels — Taxi & Tour Packages",
+  "short_name": "Tourist & Travels",
+  "description": "Book taxis from Hisar and curated tour packages across India. Live fare estimates, route maps, and WhatsApp booking.",
+  "id": "./",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#070b10",
+  "theme_color": "#070b10",
+  "lang": "en-IN",
+  "dir": "ltr",
+  "categories": ["travel", "transport", "lifestyle"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Taxi fare calculator",
+      "short_name": "Taxi fare",
+      "description": "Estimate a round trip from Hisar at ₹16/km.",
+      "url": "./#taxi",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Tour packages",
+      "short_name": "Packages",
+      "description": "Browse curated tour packages departing from Hisar.",
+      "url": "./#packages",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Send an enquiry",
+      "short_name": "Enquiry",
+      "description": "Send a trip enquiry on WhatsApp.",
+      "url": "./#enquiry",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

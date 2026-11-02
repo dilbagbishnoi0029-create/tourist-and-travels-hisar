@@ -7,6 +7,12 @@
   <meta name="description" content="Curated tours from Hisar across India with Tourist and Travels — small-group journeys, handpicked stays, and local guides. Plan your next trip on WhatsApp.">
   <meta name="theme-color" content="#070b10">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Tourist &amp; Travels">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
 
@@ -28,12 +34,20 @@
     <div class="topbar">
       <div class="container topbar-inner">
         <span class="topbar-note">Tourist and Travels — Hisar, Haryana</span>
-        <a class="topbar-call" href="tel:+919996095229" aria-label="Call +91 99960 95229">
-          <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" focusable="false">
-            <path fill="currentColor" d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.85 21 3 13.15 3 3a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.24.2 2.45.57 3.57a1 1 0 0 1-.25 1.02l-2.2 2.2Z"/>
-          </svg>
-          <span>+91 99960 95229</span>
-        </a>
+        <div class="topbar-actions">
+          <button class="topbar-install" id="install-app" type="button" hidden>
+            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false">
+              <path d="M12 3v11m0 0 4-4m-4 4-4-4M5 19h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Install app</span>
+          </button>
+          <a class="topbar-call" href="tel:+919996095229" aria-label="Call +91 99960 95229">
+            <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" focusable="false">
+              <path fill="currentColor" d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.85 21 3 13.15 3 3a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.24.2 2.45.57 3.57a1 1 0 0 1-.25 1.02l-2.2 2.2Z"/>
+            </svg>
+            <span>+91 99960 95229</span>
+          </a>
+        </div>
       </div>
     </div>
     <div class="container header-inner">
@@ -591,6 +605,7 @@
   <script src="auth.js" defer></script>
   <script src="admin.js" defer></script>
   <script src="taxi.js" defer></script>
+  <script src="pwa.js" defer></script>
   <script src="script.js" defer></script>
 </body>
 </html>
