@@ -24,6 +24,7 @@
   };
 
   const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isAndroid = /android/i.test(navigator.userAgent);
   const isStandalone =
     window.matchMedia("(display-mode: standalone)").matches ||
     window.navigator.standalone === true;
@@ -31,9 +32,28 @@
   let deferredPrompt = null;
 
   if (isStandalone) {
+    // Already running from the home screen.
     button.hidden = true;
     return;
   }
+
+  // Keep the install button visible even when the browser does not offer
+  // a native install prompt; tapping it shows the right instructions.
+  button.hidden = false;
+
+  const showInstallHelp = () => {
+    if (isIos) {
+      showToast("iPhone: tap Share, then choose “Add to Home Screen”.");
+      return;
+    }
+
+    if (isAndroid) {
+      showToast("Chrome menu (⋮) → “Add to Home screen” / “Install app”.");
+      return;
+    }
+
+    showToast("Use the install icon in the address bar, or browser menu → “Install app”.");
+  };
 
   window.addEventListener("beforeinstallprompt", (event) => {
     event.preventDefault();
@@ -41,28 +61,20 @@
     button.hidden = false;
   });
 
-  if (isIos) {
-    button.hidden = false;
-  }
-
   button.addEventListener("click", async () => {
     if (deferredPrompt) {
       deferredPrompt.prompt();
       const choice = await deferredPrompt.userChoice;
       deferredPrompt = null;
-      button.hidden = true;
+
       if (choice.outcome === "accepted") {
+        button.hidden = true;
         showToast("App installed. Open it from your home screen.");
       }
       return;
     }
 
-    if (isIos) {
-      showToast("iPhone: tap Share, then choose “Add to Home Screen”.");
-      return;
-    }
-
-    showToast("Open this site in Chrome, then use the browser menu → Install app.");
+    showInstallHelp();
   });
 
   window.addEventListener("appinstalled", () => {

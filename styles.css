@@ -214,14 +214,21 @@ h3 {
   }
 
   .topbar-inner {
-    justify-content: center;
+    justify-content: space-between;
   }
 
   .topbar-actions {
+    width: 100%;
+    justify-content: space-between;
     gap: 10px;
   }
 
+  .topbar-call {
+    order: 1;
+  }
+
   .topbar-install {
+    order: 2;
     padding-inline: 10px;
   }
 }

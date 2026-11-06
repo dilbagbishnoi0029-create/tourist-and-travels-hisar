@@ -1,14 +1,16 @@
-const VERSION = "tourist-travels-v1";
+const VERSION = "tourist-travels-v2";
 
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
+  "./styles.css?v=2",
   "./script.js",
   "./taxi.js",
   "./auth.js",
   "./admin.js",
   "./pwa.js",
+  "./pwa.js?v=2",
   "./manifest.json",
   "./assets/favicon.svg",
   "./assets/icons/icon-192.png",
