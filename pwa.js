@@ -132,9 +132,9 @@
       showCopy = true;
     } else if (isAndroid) {
       title = "Install on Android";
-      intro = "Chrome can install this website like an app.";
+      intro = "Your browser can install this website like an app.";
       steps = [
-        "Tap the Chrome menu (⋮) at the top right.",
+        "Tap the browser menu (⋮ or ≡) at the top right.",
         "Tap “Install app” or “Add to Home screen”.",
         "Confirm “Install” — the app icon appears on your home screen.",
       ];
