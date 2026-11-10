@@ -13,7 +13,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Tourist &amp; Travels">
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="stylesheet" href="styles.css?v=3">
   <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
 
   <meta property="og:type" content="website">
@@ -598,6 +598,22 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
+  <div class="install-help" id="install-help" hidden>
+    <div class="install-help-card" role="dialog" aria-modal="true" aria-labelledby="install-help-title" aria-describedby="install-help-intro">
+      <button class="install-help-close" type="button" data-install-close aria-label="Close install instructions">&times;</button>
+      <p class="eyebrow">Install app</p>
+      <h2 id="install-help-title">Add to Home screen</h2>
+      <p class="install-help-intro" id="install-help-intro"></p>
+      <ol class="install-help-steps" id="install-help-steps"></ol>
+      <p class="install-help-url" id="install-help-url"></p>
+      <div class="install-help-actions">
+        <a class="btn btn-primary btn-small" id="install-open-chrome" href="#" hidden>Open in Chrome</a>
+        <button class="btn btn-ghost btn-small" id="install-copy-link" type="button" hidden>Copy link</button>
+        <button class="btn btn-ghost btn-small" type="button" data-install-close>Got it</button>
+      </div>
+    </div>
+  </div>
+
   <script src="assets/vendor/firebase-app-compat.js" defer></script>
   <script src="assets/vendor/firebase-auth-compat.js" defer></script>
   <script src="assets/vendor/firebase-firestore-compat.js" defer></script>
@@ -605,7 +621,7 @@
   <script src="auth.js" defer></script>
   <script src="admin.js" defer></script>
   <script src="taxi.js" defer></script>
-  <script src="pwa.js?v=2" defer></script>
+  <script src="pwa.js?v=3" defer></script>
   <script src="script.js" defer></script>
 </body>
 </html>
