@@ -367,7 +367,7 @@
           </div>
           <button class="btn btn-primary btn-small" id="admin-new" type="button">Add package</button>
         </div>
-        <p class="admin-note">Only approved Google accounts can edit packages. Saving here updates the public packages section from Firestore.</p>
+        <p class="admin-note">Only the owner Google account can add or edit packages. Saving here updates the public packages section from Firestore.</p>
 
         <div class="admin-grid">
           <div class="admin-list" id="admin-list" aria-live="polite"></div>
@@ -612,7 +612,7 @@
   <script src="assets/vendor/firebase-auth-compat.js" defer></script>
   <script src="assets/vendor/firebase-firestore-compat.js" defer></script>
   <script src="assets/vendor/leaflet/leaflet.js" defer></script>
-  <script src="auth.js" defer></script>
+  <script src="auth.js?v=5" defer></script>
   <script src="admin.js" defer></script>
   <script src="taxi.js" defer></script>
   <script src="pwa.js?v=4" defer></script>

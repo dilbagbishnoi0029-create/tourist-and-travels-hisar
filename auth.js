@@ -125,6 +125,6 @@
   window.TT = {
     auth,
     db: firebase.firestore(),
-    adminEmails: ["dilbagbishnoi0029@gmail.com", "vishavsuthar0@gmail.com"],
+    adminEmails: ["dilbagbishnoi0029@gmail.com"],
   };
 })();

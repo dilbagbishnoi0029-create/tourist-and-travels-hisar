@@ -1,4 +1,4 @@
-const VERSION = "tourist-travels-v4";
+const VERSION = "tourist-travels-v5";
 
 const CORE_ASSETS = [
   "./",
@@ -8,6 +8,7 @@ const CORE_ASSETS = [
   "./script.js",
   "./taxi.js",
   "./auth.js",
+  "./auth.js?v=5",
   "./admin.js",
   "./pwa.js",
   "./pwa.js?v=4",
