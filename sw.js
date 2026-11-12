@@ -1,4 +1,4 @@
-const VERSION = "tourist-travels-v6";
+const VERSION = "tourist-travels-v9";
 
 const CORE_ASSETS = [
   "./",
