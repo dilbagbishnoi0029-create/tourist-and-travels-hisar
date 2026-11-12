@@ -1,5 +1,6 @@
 .firebase/
 .opencode/
+.playwright-cli/
 tasks/
 firebase-debug.log
 *.log

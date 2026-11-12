@@ -7,6 +7,10 @@ service cloud.firestore {
         && request.auth.token.email == 'dilbagbishnoi0029@gmail.com';
     }
 
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
     function validPackage(data) {
       return data.keys().hasOnly([
           'name', 'destination', 'duration', 'highlights', 'price',
@@ -30,7 +34,9 @@ service cloud.firestore {
     }
 
     function validEnquiry(data) {
-      return data.keys().hasOnly(['name', 'email', 'phone', 'destination', 'message', 'createdAt'])
+      return data.keys().hasOnly([
+          'name', 'email', 'phone', 'destination', 'message', 'createdAt', 'uid', 'userEmail'
+        ])
         && data.keys().hasAll(['name', 'email', 'phone', 'destination', 'message', 'createdAt'])
         && data.name is string && data.name.size() >= 2 && data.name.size() <= 80
         && data.email is string && data.email.size() <= 120
@@ -41,6 +47,42 @@ service cloud.firestore {
         && data.createdAt is string && data.createdAt.size() <= 40;
     }
 
+    function validEnquiryOwner(data) {
+      return (!('uid' in data) || (
+          data.uid is string
+          && data.uid.size() <= 128
+          && (
+            data.uid == ''
+            || (request.auth != null && data.uid == request.auth.uid)
+          )
+        ))
+        && (!('userEmail' in data) || (
+          data.userEmail is string
+          && data.userEmail.size() <= 120
+          && (
+            data.userEmail == ''
+            || (request.auth != null && data.userEmail == request.auth.token.email)
+          )
+        ));
+    }
+
+    function validUser(data) {
+      return data.keys().hasOnly([
+          'uid', 'name', 'email', 'photoUrl', 'phone', 'provider', 'createdAt', 'lastLoginAt'
+        ])
+        && data.keys().hasAll([
+          'uid', 'name', 'email', 'photoUrl', 'phone', 'provider', 'createdAt', 'lastLoginAt'
+        ])
+        && data.uid is string && data.uid == request.auth.uid
+        && data.name is string && data.name.size() <= 120
+        && data.email is string && data.email == request.auth.token.email
+        && data.photoUrl is string && data.photoUrl.size() <= 600
+        && data.phone is string && data.phone.size() <= 20
+        && data.provider is string && data.provider.size() <= 40
+        && data.createdAt is string && data.createdAt.size() <= 40
+        && data.lastLoginAt is string && data.lastLoginAt.size() <= 40;
+    }
+
     match /packages/{packageId} {
       allow read: if resource.data.visible == true || isAdmin();
       allow create, update: if isAdmin() && validPackage(request.resource.data);
@@ -48,8 +90,30 @@ service cloud.firestore {
     }
 
     match /enquiries/{enquiryId} {
-      allow create: if validEnquiry(request.resource.data);
-      allow read, update, delete: if false;
+      allow create: if validEnquiry(request.resource.data) && validEnquiryOwner(request.resource.data);
+      allow read: if isAdmin() || (request.auth != null && resource.data.get('uid', '') == request.auth.uid);
+      allow update, delete: if false;
+    }
+
+    match /users/{userId} {
+      allow read: if isAdmin() || isOwner(userId);
+      allow create: if isOwner(userId)
+        && validUser(request.resource.data)
+        && request.resource.data.createdAt == request.resource.data.lastLoginAt;
+      allow update: if isOwner(userId)
+        && validUser(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if false;
+    }
+
+    match /users/{userId}/favourites/{itemId} {
+      allow read: if isAdmin() || isOwner(userId);
+      allow write: if isOwner(userId);
+    }
+
+    match /users/{userId}/bookings/{itemId} {
+      allow read: if isAdmin() || isOwner(userId);
+      allow write: if isOwner(userId);
     }
 
     match /{document=**} {

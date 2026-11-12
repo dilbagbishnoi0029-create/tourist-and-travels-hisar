@@ -90,7 +90,7 @@
             <p class="package-route"><span class="route-from">From Hisar</span><span class="route-sep" aria-hidden="true">→</span><span>${escapeHtml(pkg.destination)}</span></p>
             <div class="package-head">
               <h3>${escapeHtml(pkg.name)}</h3>
-              <p class="package-price"><span class="price-amount">${formatPrice(finalPrice)}</span> <span class="price-unit">per person</span>${oldPrice}</p>
+              <p class="package-price"><span class="price-amount">${formatPrice(finalPrice)}</span> <span class="price-unit">5 people</span>${oldPrice}</p>
             </div>
             <ul class="highlights">${highlights}</ul>
             <a class="package-link" href="https://wa.me/${WHATSAPP}?text=${message}" target="_blank" rel="noopener">

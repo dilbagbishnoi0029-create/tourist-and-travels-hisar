@@ -16,6 +16,13 @@
   const name = document.getElementById("auth-name");
   const signOutButton = document.getElementById("auth-signout");
   const toast = document.getElementById("toast");
+  const phonePrompt = document.getElementById("phone-prompt");
+  const phoneForm = document.getElementById("phone-prompt-form");
+  const phoneInput = document.getElementById("phone-prompt-input");
+  const phoneSkip = document.getElementById("phone-prompt-skip");
+  const phoneStatus = document.getElementById("phone-prompt-status");
+
+  const PHONE_SKIP_KEY = "tt-phone-prompt-skipped";
 
   let toastTimer;
 
@@ -57,6 +64,66 @@
     avatar.style.backgroundImage = user.photoURL ? `url("${user.photoURL}")` : "";
   };
 
+  const normalisePhone = (value) => String(value ?? "").trim().slice(0, 20);
+  const phoneDigits = (value) => String(value ?? "").replace(/\D/g, "");
+
+  const setPhoneStatus = (message, type = "") => {
+    if (!phoneStatus) return;
+    phoneStatus.textContent = message;
+    phoneStatus.classList.remove("is-success", "is-error");
+    if (type) phoneStatus.classList.add(type);
+  };
+
+  const hidePhonePrompt = () => {
+    if (!phonePrompt) return;
+    phonePrompt.hidden = true;
+  };
+
+  const showPhonePrompt = () => {
+    if (!phonePrompt) return;
+    let skipped = false;
+    try {
+      skipped = sessionStorage.getItem(PHONE_SKIP_KEY) === "1";
+    } catch {
+      skipped = false;
+    }
+    if (skipped) return;
+    setPhoneStatus("");
+    phonePrompt.hidden = false;
+  };
+
+  const saveProfile = async (user) => {
+    const ref = db.collection("users").doc(user.uid);
+    const now = new Date().toISOString();
+    let existing = null;
+
+    try {
+      const snapshot = await ref.get();
+      if (snapshot.exists) existing = snapshot.data();
+    } catch {
+      existing = null;
+    }
+
+    const profile = {
+      uid: user.uid,
+      name: String(user.displayName || user.email || "Account").slice(0, 120),
+      email: String(user.email || "").slice(0, 120),
+      photoUrl: String(user.photoURL || "").slice(0, 600),
+      phone: normalisePhone(existing?.phone),
+      provider: String(user.providerData?.[0]?.providerId || "google.com").slice(0, 40),
+      createdAt: String(existing?.createdAt || now).slice(0, 40),
+      lastLoginAt: now,
+    };
+
+    try {
+      await ref.set(profile);
+    } catch {
+      // Offline or rules not deployed yet: keep the site usable.
+    }
+
+    return profile;
+  };
+
   if (!window.firebase) {
     showToast("Sign-in is unavailable right now. Please try again later.");
     return;
@@ -64,6 +131,7 @@
 
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
+  const db = firebase.firestore();
   const provider = new firebase.auth.GoogleAuthProvider();
   provider.setCustomParameters({ prompt: "select_account" });
   auth.useDeviceLanguage();
@@ -120,11 +188,74 @@
     }
   });
 
-  auth.onAuthStateChanged(updateUser);
+  phoneForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const user = auth.currentUser;
+    if (!user) {
+      hidePhonePrompt();
+      return;
+    }
+
+    const phone = normalisePhone(phoneInput?.value);
+    const digits = phoneDigits(phone);
+
+    if (digits.length < 7 || digits.length > 15) {
+      setPhoneStatus("Please enter a valid phone number.", "is-error");
+      phoneInput?.focus();
+      return;
+    }
+
+    const submit = phoneForm.querySelector('button[type="submit"]');
+    if (submit) {
+      submit.disabled = true;
+      submit.textContent = "Saving…";
+    }
+    setPhoneStatus("Saving your phone…");
+
+    try {
+      await db.collection("users").doc(user.uid).set({ phone }, { merge: true });
+      setPhoneStatus("");
+      hidePhonePrompt();
+      showToast("Phone saved.");
+    } catch {
+      setPhoneStatus("Could not save your phone. Please try again.", "is-error");
+    } finally {
+      if (submit) {
+        submit.disabled = false;
+        submit.textContent = "Save phone";
+      }
+    }
+  });
+
+  phoneSkip?.addEventListener("click", () => {
+    try {
+      sessionStorage.setItem(PHONE_SKIP_KEY, "1");
+    } catch {
+      // Private mode without storage: the prompt still closes for this page.
+    }
+    hidePhonePrompt();
+  });
+
+  auth.onAuthStateChanged(async (user) => {
+    updateUser(user);
+
+    if (!user) {
+      hidePhonePrompt();
+      return;
+    }
+
+    const profile = await saveProfile(user);
+    if (profile.phone) {
+      hidePhonePrompt();
+    } else {
+      showPhonePrompt();
+    }
+  });
 
   window.TT = {
     auth,
-    db: firebase.firestore(),
+    db,
     adminEmails: ["dilbagbishnoi0029@gmail.com"],
   };
 })();

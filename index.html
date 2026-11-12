@@ -13,7 +13,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Tourist &amp; Travels">
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
   <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
 
   <meta property="og:type" content="website">
@@ -226,7 +226,7 @@
               <p class="package-route"><span class="route-from">From Hisar</span><span class="route-sep" aria-hidden="true">→</span><span>Alleppey, Kerala</span></p>
               <div class="package-head">
                 <h3>Kerala Backwaters</h3>
-                <p class="package-price"><span class="price-amount">₹32,500</span> <span class="price-unit">per person</span></p>
+                <p class="package-price"><span class="price-amount">₹32,500</span> <span class="price-unit">5 people</span></p>
               </div>
               <ul class="highlights">
                 <li>Private houseboat evening</li>
@@ -249,7 +249,7 @@
               <p class="package-route"><span class="route-from">From Hisar</span><span class="route-sep" aria-hidden="true">→</span><span>Jaipur &amp; Jaisalmer, Rajasthan</span></p>
               <div class="package-head">
                 <h3>Rajasthan Heritage</h3>
-                <p class="package-price"><span class="price-amount">₹41,000</span> <span class="price-unit">per person</span></p>
+                <p class="package-price"><span class="price-amount">₹41,000</span> <span class="price-unit">5 people</span></p>
               </div>
               <ul class="highlights">
                 <li>Heritage haveli stays</li>
@@ -272,7 +272,7 @@
               <p class="package-route"><span class="route-from">From Hisar</span><span class="route-sep" aria-hidden="true">→</span><span>Leh, Ladakh</span></p>
               <div class="package-head">
                 <h3>Ladakh High Passes</h3>
-                <p class="package-price"><span class="price-amount">₹58,000</span> <span class="price-unit">per person</span></p>
+                <p class="package-price"><span class="price-amount">₹58,000</span> <span class="price-unit">5 people</span></p>
               </div>
               <ul class="highlights">
                 <li>Pangong Lake at sunrise</li>
@@ -295,7 +295,7 @@
               <p class="package-route"><span class="route-from">From Hisar</span><span class="route-sep" aria-hidden="true">→</span><span>North Goa, Goa</span></p>
               <div class="package-head">
                 <h3>Goa, Slowly</h3>
-                <p class="package-price"><span class="price-amount">₹24,500</span> <span class="price-unit">per person</span></p>
+                <p class="package-price"><span class="price-amount">₹24,500</span> <span class="price-unit">5 people</span></p>
               </div>
               <ul class="highlights">
                 <li>Boutique stay near Assagao</li>
@@ -318,7 +318,7 @@
               <p class="package-route"><span class="route-from">From Hisar</span><span class="route-sep" aria-hidden="true">→</span><span>Shillong &amp; Cherrapunji, Meghalaya</span></p>
               <div class="package-head">
                 <h3>Meghalaya in the Mist</h3>
-                <p class="package-price"><span class="price-amount">₹36,500</span> <span class="price-unit">per person</span></p>
+                <p class="package-price"><span class="price-amount">₹36,500</span> <span class="price-unit">5 people</span></p>
               </div>
               <ul class="highlights">
                 <li>Living-root bridge trek</li>
@@ -341,7 +341,7 @@
               <p class="package-route"><span class="route-from">From Hisar</span><span class="route-sep" aria-hidden="true">→</span><span>Havelock Island, Andaman</span></p>
               <div class="package-head">
                 <h3>Andaman Blue</h3>
-                <p class="package-price"><span class="price-amount">₹49,000</span> <span class="price-unit">per person</span></p>
+                <p class="package-price"><span class="price-amount">₹49,000</span> <span class="price-unit">5 people</span></p>
               </div>
               <ul class="highlights">
                 <li>Havelock Island beaches</li>
@@ -592,6 +592,21 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
+  <div class="phone-prompt" id="phone-prompt" hidden>
+    <form class="phone-prompt-card" id="phone-prompt-form" role="dialog" aria-labelledby="phone-prompt-title" aria-describedby="phone-prompt-text">
+      <p class="phone-prompt-eyebrow">Your account</p>
+      <h2 id="phone-prompt-title">Add your phone number?</h2>
+      <p class="phone-prompt-text" id="phone-prompt-text">We’ll use it to reply to your enquiries faster. You can skip this for now.</p>
+      <label class="phone-prompt-label" for="phone-prompt-input">Phone / WhatsApp</label>
+      <input class="phone-prompt-input" id="phone-prompt-input" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="+91 99960 95229">
+      <p class="form-status" id="phone-prompt-status" role="status" aria-live="polite"></p>
+      <div class="phone-prompt-actions">
+        <button class="btn btn-primary btn-small" type="submit">Save phone</button>
+        <button class="btn btn-ghost btn-small" id="phone-prompt-skip" type="button">Skip</button>
+      </div>
+    </form>
+  </div>
+
   <div class="install-help" id="install-help" hidden>
     <div class="install-help-card" role="dialog" aria-modal="true" aria-labelledby="install-help-title" aria-describedby="install-help-intro">
       <button class="install-help-close" type="button" data-install-close aria-label="Close install instructions">&times;</button>
@@ -612,10 +627,10 @@
   <script src="assets/vendor/firebase-auth-compat.js" defer></script>
   <script src="assets/vendor/firebase-firestore-compat.js" defer></script>
   <script src="assets/vendor/leaflet/leaflet.js" defer></script>
-  <script src="auth.js?v=5" defer></script>
-  <script src="admin.js" defer></script>
+  <script src="auth.js?v=6" defer></script>
+  <script src="admin.js?v=6" defer></script>
   <script src="taxi.js" defer></script>
   <script src="pwa.js?v=4" defer></script>
-  <script src="script.js" defer></script>
+  <script src="script.js?v=6" defer></script>
 </body>
 </html>

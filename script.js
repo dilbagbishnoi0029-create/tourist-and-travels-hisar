@@ -164,6 +164,7 @@
         return;
       }
 
+      const currentUser = window.TT?.auth?.currentUser || null;
       const payload = {
         fields: {
           name: { stringValue: data.name },
@@ -172,6 +173,8 @@
           destination: { stringValue: data.destination },
           message: { stringValue: data.message },
           createdAt: { stringValue: data.createdAt },
+          uid: { stringValue: currentUser?.uid || "" },
+          userEmail: { stringValue: currentUser?.email || "" },
         },
       };
 
